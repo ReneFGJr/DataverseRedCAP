@@ -155,7 +155,7 @@ class DataExport
 					<td valign="top" style="padding-top:5px;width:120px;text-align:center;">
 						<a href="<?php echo APP_PATH_WEBROOT . "index.php?route=PdfController:index&pid=".PROJECT_ID."&allrecords" ?>" title="<?php echo js_escape2($lang['data_export_tool_149']) ?>"
 						><img src="<?php echo APP_PATH_IMAGES ?>download_pdf.gif"></a>
-						<br><br>
+						<br><br>						
 						<a href="<?php echo APP_PATH_WEBROOT . "index.php?route=PdfController:index&pid=".PROJECT_ID."&allrecords&compact=1" ?>" title="<?php echo js_escape2($lang['data_export_tool_149']." ".$lang['data_entry_425']) ?>"
 						><img src="<?php echo APP_PATH_IMAGES ?>download_pdf_compact.gif"></a>
 					</td>
@@ -288,11 +288,11 @@ class DataExport
 																false, false, false, false, false, array(), array(), true,
 																false, false, true, true, $liveFilterLogic, $liveFilterGroupId, $liveFilterEventId);
 		// If there are no filters, then set $includeRecordsEvents as empty array for faster processing
-		if ($liveFilterLogic == '' && $liveFilterGroupId == '' && $liveFilterEventId == ''
+		if ($liveFilterLogic == '' && $liveFilterGroupId == '' && $liveFilterEventId == '' 
 			&& $report['limiter_logic'] == '' && empty($report['limiter_dags']) && empty($report['limiter_events'])) {
 			$includeRecordsEvents = array();
 		}
-
+		
 		$report_description = $report['description'];
 
 		// Set flag if there are no records returned for a filter (so we can distinguish this from a full data set with no filters)
@@ -622,7 +622,7 @@ class DataExport
 		}
 		if ($report['user_edit_access'] == 'ALL') {
 			// If ALL is selected, then remove custom options
-			$report['user_edit_access_roles'] = $report['user_edit_access_dags'] = array();
+			$report['user_edit_access_roles'] = $report['user_edit_access_dags'] = array();			
 			// Make sure that the current user gets automatically selected to prevent lockout
 			$report['user_edit_access_users'] = array(USERID);
 		}
@@ -926,7 +926,7 @@ class DataExport
 					RCView::td(array('colspan'=>4, 'id'=>'field-dropdown-row'),
 						RCView::span(array('id'=>'field-dropdown-container'),
 							// Invisible ropdown/text box used as the basis from choosing fields
-							self::outputFieldDropdown($rc_field_dropdown_options) .
+							self::outputFieldDropdown($rc_field_dropdown_options) . 
 							self::outputFieldAutoSuggest()
 						)
 					)
@@ -1058,10 +1058,10 @@ class DataExport
 						$exportDagSurveyFieldsOptions
 					)
 				);
-
-
-
-
+		
+		
+		
+		
 
 
 		## FILTERS
@@ -1076,7 +1076,7 @@ class DataExport
 				);
 		// Longitudinal only (or if has repeating instruments): Allow user to set filter type (record-level filtering or event-level filtering)
 		$filter_type_options = "";
-		if ($Proj->longitudinal || $Proj->hasRepeatingForms())
+		if ($Proj->longitudinal || $Proj->hasRepeatingForms()) 
 		{
 			if ($Proj->longitudinal && $Proj->hasRepeatingForms()) {
 				$filter_type_text = $lang['data_export_tool_222'];
@@ -2245,7 +2245,7 @@ class DataExport
 		if (!$applyUserAccess) {
 			$sql = "select distinct r.report_id, r.title, r.is_public, r.hash, r.report_order, af.folder_id, af.name as folder, af.position,
 					r.dynamic_filter1, r.dynamic_filter2, r.dynamic_filter3, r.unique_report_name
-					from redcap_reports r
+					from redcap_reports r 
 					left join redcap_reports_folders_items ai on ai.report_id = r.report_id
 					left join redcap_reports_folders af on af.folder_id = ai.folder_id
 					where r.project_id = ".$project_id;
@@ -2287,7 +2287,7 @@ class DataExport
 		$counter = 1;
 		while ($row = db_fetch_assoc($q)) {
 			// Are any live filters the record ID field?
-			$liveFilterRecordId = "";
+			$liveFilterRecordId = "";			
 			for ($i = 1; $i <= self::MAX_LIVE_FILTERS; $i++) {
 				if ($row['dynamic_filter'.$i] == $Proj->table_pk) {
 					$liveFilterRecordId = $i;
@@ -2295,7 +2295,7 @@ class DataExport
 			}
 			// Add to array
             $public_url = $row['is_public'] ? APP_PATH_SURVEY_FULL . "index.php?__report=".$row['hash'] : "";
-			$reports[] = array('report_id'=>$row['report_id'], 'title'=>$row['title'], 'folder_id'=>$row['folder_id'], 'folder'=>$row['folder'],
+			$reports[] = array('report_id'=>$row['report_id'], 'title'=>$row['title'], 'folder_id'=>$row['folder_id'], 'folder'=>$row['folder'], 
 							   'collapsed'=>0, 'liveFilterRecordId'=>$liveFilterRecordId, 'is_public'=>$row['is_public'], 'public_url'=>$public_url);
 			// Check report order
 			if (is_numeric($row['position'])) {
@@ -2309,7 +2309,7 @@ class DataExport
 			}
 		}
 
-		/*
+		/* 
 		// If report order is off, fix it
 		if ($fixOrdering && $reportsOutOfOrder && self::fixReportOrder()) {
 			// Since they're fixed, call this method recursively so that it outputs the fixed report order
@@ -2346,14 +2346,14 @@ class DataExport
 			}
 		}
     }
-
+	
 	// Get list of all reports to which the user has EDIT ACCESS
 	public static function getReportsEditAccess($username, $role_id, $dag_id, $report_id=null)
 	{
 		$reports_edit_access = array();
 		$reports = self::getReports($report_id);
 		if (is_numeric($report_id)) $reports = array($report_id=>$reports);
-		foreach ($reports as $report_id=>$attr)
+		foreach ($reports as $report_id=>$attr) 
 		{
 			if ((defined("SUPER_USER") && SUPER_USER) ||
 				$attr['user_edit_access'] == 'ALL' ||
@@ -2520,9 +2520,9 @@ class DataExport
 			if ($user_rights['reports']) {
 				// If this is a pre-defined report OR if user does NOT have edit access to it, then do not display buttons
 				if ($isPredefined || (!in_array($report_id, $reports_edit_access) && !SUPER_USER)) {
-					$rows[$item_num][] = '';
+					$rows[$item_num][] = '';					
 				} else {
-					$rows[$item_num][] =
+					$rows[$item_num][] = 
 						//Edit
 						RCView::button(array('class'=>'jqbuttonmed', 'style'=>'margin-right:2px;font-size:11px;padding: 1px 6px;', 'onclick'=>"window.location.href = '".APP_PATH_WEBROOT."DataExport/index.php?pid=".PROJECT_ID."&report_id=$report_id&addedit=1';"),
 							'<i class="fas fa-pencil-alt"></i> ' .$lang['global_27']
@@ -2603,7 +2603,7 @@ class DataExport
     public static function getUniqueReportNames($report_ids)
     {
 		$unique_report_names = array();
-		$sql = "select report_id, unique_report_name from redcap_reports
+		$sql = "select report_id, unique_report_name from redcap_reports 
                 where report_id in (".prep_implode($report_ids).")";
         $q = db_query($sql);
         while ($row = db_fetch_assoc($q)) {
@@ -2615,7 +2615,7 @@ class DataExport
 	// Get unique report name using unique report name and project id
 	public static function getReportIdUsingUniqueName($project_id, $unique_report_name)
 	{
-		$sql = "select report_id from redcap_reports
+		$sql = "select report_id from redcap_reports 
                 where unique_report_name = '".db_escape($unique_report_name)."' and project_id = $project_id";
 		$q = db_query($sql);
 		return db_result($q, 0);
@@ -2645,15 +2645,15 @@ class DataExport
 		$exportDagSurveyFieldsOptions = $exportDagOption . ($exportDagOption == '' ? '' : RCView::br()) . $exportSurveyFieldsOptions;
 
 		// Options to remove missing data codes
-		// UI elements commented as not implemented in getData
+		// UI elements commented as not implemented in getData		
 			// $exportMissingDataCodesOptions = "";
 			// $exportMissingDataCodesOptions = RCView::checkbox(array('name'=>'output_md_codes')) .
 								   // $lang['missing_data_05'];
-
-
-
-
-
+			
+			
+						
+		
+		
 		// De-Identification Options box
 		if ($user_rights['data_export_tool'] == '2') {
 			// FULL DE-ID: User has limited rights, so check off everything and disable options
@@ -2784,13 +2784,13 @@ class DataExport
 								$deid_deselect
 								$partialExportRightsNotice
 							</div>";
-
+		
 		// Defaults for CSV delimiter and decimal character
 		$defaultCsvDelimiter = UIState::getUIStateValue('', 'export_dialog', 'csvDelimiter');
 		if ($defaultCsvDelimiter == '') $defaultCsvDelimiter = ",";
 		$decimalCharacter = UIState::getUIStateValue('', 'export_dialog', 'decimalCharacter');
 		$decimalCharacterOptions = array(''=>$lang['data_export_tool_234'], '.'=>$lang['data_export_tool_236'], ','=>$lang['data_export_tool_237']);
-
+		
 		// Return the html
 		return 	RCView::div(array('class'=>'simpleDialog', 'id'=>'exportFormatDialog'),
 					// Don't show instructions at top of dialog for Whole Project XML export
@@ -2847,24 +2847,7 @@ class DataExport
 										RCView::legend(array('style'=>'padding:5px 3px;margin-left:15px;color:#800000;font-weight:bold;font-size:15px;'),
 											$lang['report_builder_114']
 										) .
-
 										RCView::table(array('id'=>'export_choices_table', 'cellspacing'=>0, 'style'=>'margin-top:6px;width:100%;table-layout:fixed;'),
-										////////////////////////////////////////////////// Dataverse
-										RCView::tr(
-											array(),
-											RCView::td(
-												array('style' => 'padding:1px 15px 5px;cursor:pointer;cursor:hand;'),
-												RCView::radio(array('name' => 'export_format', 'value' => 'dataverse', 'style' => 'vertical-align:middle;margin-right:22px;')) .
-													RCView::img(array('src' => 'logo_dataverse.gif', 'style' => 'vertical-align:middle;')) .
-													RCView::span(
-														array('style' => 'vertical-align:middle;font-weight:bold;font-size:13px;margin-left:10px;'),
-														'Dataverse ArcaDados'
-														//.$lang['data_export_tool_172'] .
-														//" " . $lang['report_builder_49']
-													)
-											)
-										) .
-
 											// CSV Raw
 											RCView::tr(array(),
 												RCView::td(array('style'=>'padding:1px 15px 5px;cursor:pointer;cursor:hand;'),
@@ -2969,7 +2952,7 @@ class DataExport
 									)
 								) .
 								RCView::td(array('valign'=>'top'),
-
+									
 									// Missing Data Options
 									// commented as not implemented in getData
 									// (sizeof($missingDataCodes) >0 ? :
@@ -3027,9 +3010,9 @@ class DataExport
 										RCView::div(array('style'=>'padding:12px 2px 5px;'),
 											RCView::div(array('style'=>'font-size:12px;font-weight:bold;'),
 												$lang['data_export_tool_233']
-											) .
-											$lang['data_export_tool_225'] . RCView::br() .
-											RCView::select(array('name'=>'csvDelimiter', 'class'=>'x-form-text x-form-field', 'style'=>'font-size:11px;margin-top:3px;'),
+											) . 
+											$lang['data_export_tool_225'] . RCView::br() . 
+											RCView::select(array('name'=>'csvDelimiter', 'class'=>'x-form-text x-form-field', 'style'=>'font-size:11px;margin-top:3px;'), 
 												self::getCsvDelimiters(), $defaultCsvDelimiter)
 										) .
 										// Decimal character option
@@ -3037,8 +3020,8 @@ class DataExport
 											RCView::div(array('style'=>'font-size:12px;font-weight:bold;'),
 												$lang['data_export_tool_232']
 											) .
-											$lang['data_export_tool_226'] . RCView::br() .
-											RCView::select(array('name'=>'decimalCharacter', 'class'=>'x-form-text x-form-field', 'style'=>'font-size:11px;margin-top:3px;'),
+											$lang['data_export_tool_226'] . RCView::br() . 
+											RCView::select(array('name'=>'decimalCharacter', 'class'=>'x-form-text x-form-field', 'style'=>'font-size:11px;margin-top:3px;'), 
 												$decimalCharacterOptions, $decimalCharacter)
 										) .
 										// Note about these settings being remembered
@@ -3052,16 +3035,16 @@ class DataExport
 					)
 				 );
 	}
-
+	
 	// Obtain array of CSV delimiters for export file formatting
 	public static function getCsvDelimiters()
 	{
 		global $lang;
-		return array(","=>", ".$lang['user_86']." ".$lang['data_export_tool_235'], "tab"=>$lang['data_export_tool_227'],
-					 ";"=>"; ".$lang['data_export_tool_228'], "|"=>"| ".$lang['data_export_tool_229'],
+		return array(","=>", ".$lang['user_86']." ".$lang['data_export_tool_235'], "tab"=>$lang['data_export_tool_227'], 
+					 ";"=>"; ".$lang['data_export_tool_228'], "|"=>"| ".$lang['data_export_tool_229'], 
 					 "^"=>"^ ".$lang['data_export_tool_230']);
 	}
-
+	
 	// Is value a valid CSV delimiter?
 	public static function isValidCsvDelimiter($val)
 	{
@@ -3129,7 +3112,7 @@ class DataExport
 					$value = (self::LIVE_FILTER_BLANK_VALUE == $_GET['lf'.$i]) ? '' : str_replace("'", "\'", $_GET['lf'.$i]); // Escape apostrophes
 					$dynamic_filters_logic[] = "[$field] = '$value'";
 				}
-
+				
 			} else {
 				$realChoices = $Proj->isSqlField($field) ? parseEnum(getSqlFieldEnum($Proj->metadata[$field]['element_enum'])) : parseEnum($Proj->metadata[$field]['element_enum']);
 				// Add blank choice at beginning + NULL choice
@@ -3211,11 +3194,11 @@ class DataExport
 		} elseif ($field == self::LIVE_FILTER_DAG_FIELD) {
 			$choices = $Proj->getGroups();
 			// Add blank choice at beginning
-			$choices = array(''=>"[ ".$lang['global_78']." ]") + $choices;
+			$choices = array(''=>"[ ".$lang['global_78']." ]") + $choices;		
 		} elseif ($field == $Proj->table_pk) {
 			$choices = Records::getRecordList($Proj->project_id, $user_rights['group_id'], true, false, null, 10000);
 			// Add blank choice at beginning
-			$choices = array(''=>"[ ".strip_tags(label_decode($Proj->metadata[$field]['element_label']))." ]") + $choices;
+			$choices = array(''=>"[ ".strip_tags(label_decode($Proj->metadata[$field]['element_label']))." ]") + $choices;	
 		} else {
 			$realChoices = strip_tags(label_decode($Proj->metadata[$field]['element_enum']));
 			$realChoices = $Proj->isSqlField($field) ? parseEnum(getSqlFieldEnum($realChoices)) : parseEnum($realChoices);
@@ -3275,7 +3258,7 @@ class DataExport
 									$removeDateFields=false, $dateShiftDates=false, $dateShiftSurveyTimestamps=false,
 									$selectedInstruments=array(), $selectedEvents=array(), $returnIncludeRecordEventArray=false,
 									$outputCheckboxLabel=false, $includeOdmMetadata=false, $storeInFileRepository=true,
-									$replaceFileUploadDocId=true, $liveFilterLogic="", $liveFilterGroupId="", $liveFilterEventId="",
+									$replaceFileUploadDocId=true, $liveFilterLogic="", $liveFilterGroupId="", $liveFilterEventId="", 
 									$isDeveloper=false, $csvDelimiter=",", $decimalCharacter='', $returnFieldsForFlatArrayData=array(),
                                     $minimizeAmountDataReturned=false, $applyUserDagFilter=true, $bypassReportAccessCheck=false, $excludeMissingDataCodes=false,
 									$returnBlankForGrayFormStatus=false, $doLoggingForExports=true, $isDataExportAction=false, $project_id=null,
@@ -3553,7 +3536,7 @@ class DataExport
 
 		// Do not replace double quotes with single quotes for CSV data export
         $replaceDoubleQuotes = in_array($outputFormat, array('csvraw', 'csvlabels')) ? false : true;
-
+		
 		// For report A and B, if we're viewing specific pages, then treat specially for efficiency
 		$records = array();
 		if (PAGE == 'DataExport/report_ajax.php' && ($report_id == 'ALL' || ($report_id == 'SELECTED' && empty($report['limiter_events'])))) {
@@ -3567,7 +3550,7 @@ class DataExport
 				list ($records, $pagingDropdownRecordList) = Records::getRecordListOfTotalRowsReturned($limit, $limitOffset, $dags);
 			}
 		}
-
+		
 		// If all the fields were removed to do de-id or due to DAG filtering, then ensure that nothing is returned by
 		// setting $records with a single blank record to force it.
 		if ($allFieldsRemoved || $returnNothing) $records = array('');
@@ -3617,7 +3600,7 @@ class DataExport
 		if ($outputType == 'report' || !empty($returnFieldsForFlatArrayData) || $isAPI || $isDeveloper || !$storeInFileRepository) {
 			return $data_content;
 		}
-
+		
 		// Check if repeating fields are in the output headers
 		$hasRepeatInstrumentField = $hasRepeatInstanceField = false;
 		if ($outputSyntaxFile && $Proj->hasRepeatingFormsEvents()) {
@@ -3641,7 +3624,7 @@ class DataExport
 		$syntax_edoc_id = null;
 		if ($outputSyntaxFile) {
 			// Generate syntax file
-			$syntax_file_contents = self::getStatsPackageSyntax($outputFormat, $fields, $csv_filename, $outputDags, $outputSurveyFields,
+			$syntax_file_contents = self::getStatsPackageSyntax($outputFormat, $fields, $csv_filename, $outputDags, $outputSurveyFields, 
 																$removeIdentifierFields, $hasRepeatInstrumentField, $hasRepeatInstanceField,
 																$report['combine_checkbox_values'], $outputMissingDataCodes);
 			// Set the filename of the syntax file
@@ -3663,7 +3646,7 @@ class DataExport
 
 
 	// Build and return the stats package syntax file
-	public static function getStatsPackageSyntax($stats_package, $fields, $data_file_name, $exportDags=false, $exportSurveyFields=false,
+	public static function getStatsPackageSyntax($stats_package, $fields, $data_file_name, $exportDags=false, $exportSurveyFields=false, 
 												 $do_remove_identifiers=false, $hasRepeatInstrumentField=false, $hasRepeatInstanceField=false,
 												 $combine_checkbox_values=false, $outputMissingDataCodes=false)
 	{
@@ -3686,7 +3669,7 @@ class DataExport
 			}
 			$dagEnum = implode(" \\n ", $dagEnumArray);
 		}
-
+		
 		// Get any cached choices for ontology fields
 		$ontologyFieldChoices = Form::getWebServiceCacheValuesBulk($Proj->project_id, $fields);
 
@@ -3728,18 +3711,18 @@ class DataExport
 			foreach ($row as $col=>$val) {
 				$col = strtoupper($col);
 				$ob->$col = $val;
-			}
+			}			
 
 			// Set values for this loop
 			$this_form = $Proj->metadata[$ob->FIELD_NAME]['form_name'];
-
+			
 			// If $combine_checkbox_values=true, then force checkbox fields as Text fields
 			if ($combine_checkbox_values && $ob->ELEMENT_TYPE == 'checkbox') {
-				$ob->ELEMENT_TYPE = $row['element_type'] = 'text';
+				$ob->ELEMENT_TYPE = $row['element_type'] = 'text';				
 			}
-
+			
 			// If an ontology field, modify attributes to convert it to a multiple choice field to load better into stats packages
-			if (isset($ontologyFieldChoices[$field]))
+			if (isset($ontologyFieldChoices[$field])) 
 			{
 				$ob->ELEMENT_TYPE = 'select';
 				$enum = array();
@@ -3841,10 +3824,10 @@ class DataExport
 					// Add pseudo-field to array
 					$field_names_prepend[] = $ob2->FIELD_NAME;
 				}
-
+				
 				// Repeating forms/events
-				if ($hasRepeatInstanceField || $hasRepeatInstrumentField)
-				{
+				if ($hasRepeatInstanceField || $hasRepeatInstrumentField) 
+				{					
 					// Add redcap_repeat_instrument
 					if ($hasRepeatInstrumentField) {
 						// Create enum for all repeating forms
@@ -3872,7 +3855,7 @@ class DataExport
 						// Add pseudo-field to array
 						$field_names_prepend[] = $ob2->FIELD_NAME;
 					}
-
+					
 					// Add redcap_repeat_instance
 					$ob2 = new stdClass();
 					$ob2->ELEMENT_TYPE = 'text';
@@ -3885,7 +3868,7 @@ class DataExport
 					// Add pseudo-field to array
 					$field_names_prepend[] = $ob2->FIELD_NAME;
 				}
-
+				
 				// If project has DAGs, add new column for group name
 				if ($exportDags)
 				{
@@ -4841,7 +4824,7 @@ class DataExport
 		// Search
 		$reportsList .= "<div id='searchReportsDiv' style='float:right;margin-right:5px;display:none;'>"
 							. RCView::text(array('id'=>'searchReports', 'class'=>'x-form-text x-form-field', 'style'=>'padding:1px 5px;', 'placeholder'=>$lang['reporting_60']))
-							. RCView::a(array('onclick'=>"closeSearchReports();", 'href'=>'javascript:;', 'style'=>'margin-right:5px;text-decoration:underline;font-weight:normal;'),
+							. RCView::a(array('onclick'=>"closeSearchReports();", 'href'=>'javascript:;', 'style'=>'margin-right:5px;text-decoration:underline;font-weight:normal;'), 
 								RCView::i(array('class'=>'fas fa-times', 'style'=>'font-size:13px;top:2px;margin-left:3px;'), '')
 							  )
 						. "</div>";
@@ -4875,7 +4858,7 @@ class DataExport
 				$reportLink = APP_PATH_WEBROOT . "DataExport/index.php?pid=".PROJECT_ID."&report_id=$this_report_id";
 				$reportLinkRecordLink = "";
 				// Get collapsed state of this folder for this specific user
-				$attr['collapsed'] = ($attr['folder_id'] != '' && UIState::getUIStateValue(PROJECT_ID, 'rpc', $attr['folder_id']) == '1') ? '1' : '0';
+				$attr['collapsed'] = ($attr['folder_id'] != '' && UIState::getUIStateValue(PROJECT_ID, 'rpc', $attr['folder_id']) == '1') ? '1' : '0';				
 				// If the record ID field is a Live Filter, then add extra link to auto-load that Live Filter
 				// if ($attr['liveFilterRecordId'] != '' && $viewingRecord) {
 					// $reportLinkRecord = $reportLink . "&lf" . $attr['liveFilterRecordId'] . "=" . $_GET['id'];
@@ -4937,7 +4920,7 @@ class DataExport
 			UIState::removeUIStateValue(PROJECT_ID, 'rpc', $folder_id);
 		}
 	}
-
+	
 	// Obtain array of all Report Folders for a given user
 	public static function getReportFolders($project_id)
 	{
@@ -4950,7 +4933,7 @@ class DataExport
 		}
 		return $folders;
 	}
-
+	
 	// Resort report folders via drag and drop
 	public static function reportFolderResort($data)
 	{
@@ -4966,12 +4949,12 @@ class DataExport
 		";
 		$q = db_query($sql);
 		if ($q !== false)
-		{
+		{			
 			$sql = "UPDATE redcap_reports_folders
 					SET position = NULL
 					WHERE project_id = ".PROJECT_ID." and folder_id in (".prep_implode($ids).")";
 			db_query($sql);
-
+		
 			$position = 1;
 			while($row = db_fetch_assoc($q))
 			{
@@ -4990,12 +4973,12 @@ class DataExport
 		}
 		exit('0');
 	}
-
+	
 	// Output HTML for table of Report Folders
 	public static function outputReportFoldersTable()
 	{
 		global $lang;
-
+		
 		$folders = self::getReportFolders(PROJECT_ID);
 
 		if (count($folders) > 0)
@@ -5003,7 +4986,7 @@ class DataExport
 			$folderTableRows = "";
 			foreach ($folders as $folder_id=>$folder_name) {
 				$folderTableRows .= RCView::tr(array('id'=>'rf_'.$folder_id),
-										RCView::td(array('class'=>'rf_td', 'style'=>'width:330px;'),
+										RCView::td(array('class'=>'rf_td', 'style'=>'width:330px;'), 
 											RCView::span(array('id'=>'rft_'.$folder_id),
 												RCView::escape($folder_name)
 											) .
@@ -5012,10 +4995,10 @@ class DataExport
 												RCView::button(array('class'=>'btn btn-xs btn-outline-success', 'onclick'=>"editFolderSave($folder_id);"), $lang['folders_11'])
 											)
 										) .
-										RCView::td(array('class'=>'rf_td text-center', 'style'=>'width:30px;'),
+										RCView::td(array('class'=>'rf_td text-center', 'style'=>'width:30px;'), 
 											RCView::a(array('href'=>'javascript:;', 'onclick'=>"editFolder($folder_id);"), RCView::fa('fas fa-pencil-alt'))
 										) .
-										RCView::td(array('class'=>'rf_td text-center', 'style'=>'width:30px;'),
+										RCView::td(array('class'=>'rf_td text-center', 'style'=>'width:30px;'), 
 											RCView::a(array('href'=>'javascript:;', 'onclick'=>"deleteFolder($folder_id);"), RCView::fa('fas fa-times', 'font-size:15px;'))
 										)
 									);
@@ -5028,14 +5011,14 @@ class DataExport
 		{
 			$folderTable = RCView::p(array('style'=>'color:#777;margin:15px 5px;font-weight:normal;'), $lang['folders_13']);
 		}
-
+		
 		return $folderTable;
 	}
-
+	
 	// Obtain array of all reports assigned to a specific Report Folder
 	public static function getReportsAssignedToFolder($folder_id)
 	{
-		$sql = "select r.report_id, r.title
+		$sql = "select r.report_id, r.title 
 				from redcap_reports_folders_items i, redcap_reports r
 				where i.folder_id = '".db_escape($folder_id)."' and r.report_id = i.report_id
 				order by r.report_order";
@@ -5046,11 +5029,11 @@ class DataExport
 		}
 		return $reports;
 	}
-
+	
 	// Obtain array of all reports assigned to a ANOTHER Report Folder (i.e. a folder other than the one provided)
 	public static function getReportsAssignedToOtherFolder($folder_id)
 	{
-		$sql = "select r.report_id, r.title
+		$sql = "select r.report_id, r.title 
 				from redcap_reports_folders_items i, redcap_reports r
 				where i.folder_id != '".db_escape($folder_id)."' and r.report_id = i.report_id
 				order by r.report_order";
@@ -5061,7 +5044,7 @@ class DataExport
 		}
 		return $reports;
 	}
-
+	
 	// Output HTML for assigment table of reports to Report Folders
 	public static function outputReportFoldersTableAssign($folder_id, $hide_assigned=0)
 	{
@@ -5069,17 +5052,17 @@ class DataExport
 
 		if (!isinteger($folder_id)) return $lang['global_01'];
 		$_SESSION['hide_assigned_rf'] = isset($hide_assigned) ? (int)$hide_assigned : 0;
-
+		
 		$reportsAssignedThisFolder = self::getReportsAssignedToFolder($folder_id);
 		$reportsAssignedOtherFolder = self::getReportsAssignedToOtherFolder($folder_id);
 		$reports = self::getReports();
-
+		
 		$report_ids = array();
 		$folderTable = $folderTableRows = "";
 		if (count($reports) > 0)
 		{
 			// Add row for every report in the project
-			foreach ($reports as $attr)
+			foreach ($reports as $attr) 
 			{
 				// If hiding assigned and this one is assigned, then skip
 				if ($hide_assigned && $reportsAssignedOtherFolder[$attr['report_id']]) continue;
@@ -5087,10 +5070,10 @@ class DataExport
 				$report_ids[] = $attr['report_id'];
 				$checked = isset($reportsAssignedThisFolder[$attr['report_id']]) ? "checked" : "";
 				$folderTableRows .= RCView::tr(array('id'=>'report_tr_'.$attr['report_id']),
-										RCView::td(array('class'=>'data fldrplist1'),
+										RCView::td(array('class'=>'data fldrplist1'), 
 											RCView::checkbox(array('id'=>'rid_'.$attr['report_id'], $checked=>$checked, 'onclick'=>"rfAssignSingle($folder_id,{$attr['report_id']},this.checked);"))
 										) .
-										RCView::td(array('class'=>'data fldrplist2', 'style'=>''),
+										RCView::td(array('class'=>'data fldrplist2', 'style'=>''), 
 											strip_tags(label_decode($attr['title'])) .
 											RCView::div(array(
 												'id'=>"report_saved_".$attr['report_id'],
@@ -5102,31 +5085,31 @@ class DataExport
 			// Add header
 			$ids = implode(',', $report_ids);
 			$folderTableRowsHdr = RCView::tr(array(),
-									RCView::td(array('class'=>'header text-center', 'style'=>'width:20px;'),
+									RCView::td(array('class'=>'header text-center', 'style'=>'width:20px;'), 
 										RCView::checkbox(array('id'=>'checkAll', 'onclick'=>"checkAllReportFolders($folder_id, '$ids');"))
 									) .
-									RCView::td(array('class'=>'header'),
+									RCView::td(array('class'=>'header'), 
 										$lang['reporting_58']
 									)
 								);
 			// Add to table
 			$folderTable = 	RCView::table(array('class'=>'form_border', 'style'=>'width:100%;'),
-								$folderTableRowsHdr .
+								$folderTableRowsHdr . 
 								$folderTableRows
 							);
 		}
-
+		
 		return $folderTable;
 	}
-
+	
 	public static function reportFolderAssign()
 	{
 		$folder_id = isset($_POST['folder_id']) ? (int)$_POST['folder_id'] : 0;
-		if (empty($folder_id)) exit;
+		if (empty($folder_id)) exit;		
 		// Check single
 		if (!isset($_POST['checkAll'])) {
 			$report_id = isset($_POST['report_id']) ? (int)$_POST['report_id'] : 0;
-			if (empty($report_id)) exit;
+			if (empty($report_id)) exit;	
 			if ($_POST['checked'] == '1') {
 				$sql = "replace into redcap_reports_folders_items (folder_id, report_id) values
 						('".db_escape($folder_id)."', '".db_escape($report_id)."')";
@@ -5151,7 +5134,7 @@ class DataExport
 				if ($checkAll) {
 					foreach ($ids as $report_id) {
 						$report_id = (int)$report_id;
-						if (!is_numeric($report_id) || empty($report_id)) continue;
+						if (!is_numeric($report_id) || empty($report_id)) continue;	
 						$sql = "replace into redcap_reports_folders_items (folder_id, report_id) values
 								('".db_escape($folder_id)."', '".db_escape($report_id)."')";
 						if (!db_query($sql)) exit('0');
@@ -5160,7 +5143,7 @@ class DataExport
 					// Remove all from table
 					$sql = "delete from redcap_reports_folders_items
 							where folder_id = '".db_escape($folder_id)."' and report_id in (".prep_implode($ids).")";
-					if (!db_query($sql)) exit('0');
+					if (!db_query($sql)) exit('0');					
 				}
 			}
 			// Logging
@@ -5168,26 +5151,26 @@ class DataExport
 			return '1';
 		}
 	}
-
+	
 	// Output HTML for drop-down list options of Report Folders
 	public static function outputReportFoldersDropdown()
 	{
 		global $lang;
-
+		
 		$folders = self::getReportFolders(PROJECT_ID);
-
-		$folderOptions = array(''=>'--- '.$lang['folders_24'].' ---')+$folders;
-
-		return RCView::select(array('id'=>'folder_id', 'onchange'=>"updateReportFolderTableAssign(this.value);", 'class'=>'x-form-text x-form-field',
+		
+		$folderOptions = array(''=>'--- '.$lang['folders_24'].' ---')+$folders; 
+		
+		return RCView::select(array('id'=>'folder_id', 'onchange'=>"updateReportFolderTableAssign(this.value);", 'class'=>'x-form-text x-form-field', 
 									'style'=>'margin-top:8px;max-width:200px;'), $folderOptions, '');
 	}
-
+	
 	// Output HTML for setting up Report Folders
 	public static function outputReportFoldersDialog()
 	{
 		global $lang;
 
-		$popup_content_left_td =
+		$popup_content_left_td = 
 			RCView::td(array('style'=>'vertical-align:top'),
 				RCView::div(array('class'=>'addFieldMatrixRowHdr', 'style'=>'width:400px; float:left;'),
 					RCView::table(array('class'=>'form_border', 'style'=>'width:97%;'),
@@ -5222,7 +5205,7 @@ class DataExport
 						  )
 					) .
 					// List of folders as table
-					RCView::div(array('id'=>'folders', 'style'=>'width:97%; height:320px; overflow-x:auto;'),
+					RCView::div(array('id'=>'folders', 'style'=>'width:97%; height:320px; overflow-x:auto;'), 
 						self::outputReportFoldersTable()
 					)
 				)
@@ -5248,8 +5231,8 @@ class DataExport
 							// Folder drop-down list
 							RCView::table(array(),
 								RCView::tr(array(),
-									RCView::td(array('style'=>'padding-right:15px;'),
-										RCView::div(array('id'=>'select_folders'),
+									RCView::td(array('style'=>'padding-right:15px;'), 
+										RCView::div(array('id'=>'select_folders'), 
 											self::outputReportFoldersDropdown()
 										)
 									) .
@@ -5272,17 +5255,17 @@ class DataExport
 						) .
 						RCView::table(array(),
 							RCView::tr(array(), $popup_content_left_td . $popup_content_right_td)
-						) .
+						) . 
 						addLangToJS(array("global_53"), false) .
 						'<script type="text/javascript">
 						var langProjFolder05 = "'.js_escape2($lang['folders_14']).'";
 						var langDelFolder = "'.js_escape2($lang['folders_16']).'";
 						var langDelete = "'.js_escape2($lang['design_170']).'";
 						</script>';
-
+		
 		return $popup_content;
 	}
-
+	
 	// Create new Report Folder
 	public static function reportFolderCreate()
 	{
@@ -5305,7 +5288,7 @@ class DataExport
 		}
 		return '0';
 	}
-
+	
 	// Edit Report Folder
 	public static function reportFolderEdit()
 	{
@@ -5319,8 +5302,8 @@ class DataExport
 			return '1';
 		}
 		return '0';
-	}
-
+	}	
+	
 	// Delete Report Folder
 	public static function reportFolderDelete()
 	{
@@ -5334,7 +5317,7 @@ class DataExport
 		}
 		return '0';
 	}
-
+	
 	// Search for a report
 	public static function reportSearch($term='')
 	{
@@ -5364,7 +5347,7 @@ class DataExport
 			}
 		}
 		$subsql = implode(" or ", $subsqla);
-
+		
 		// Obtain all report_id's that the user can view
 		$reports = self::getReportNames(null, true);
 		$report_ids = array();
@@ -5372,7 +5355,7 @@ class DataExport
 			$report_ids[] = $attr['report_id'];
 		}
 		if (empty($report_ids)) exit('[]');
-
+		
 		// Calculate score on how well the search terms matched
 		$userMatchScore = $results = array();
 		$key = 0;
@@ -5383,7 +5366,7 @@ class DataExport
 				order by trim(title)";
 		$q = db_query($sql);
 		while ($row = db_fetch_assoc($q))
-		{
+		{		
 			// Set title
 			$label = trim(strip_tags(label_decode($row['title'])));
 			// Calculate search match score.
@@ -5614,7 +5597,7 @@ class DataExport
 			$fields_no_data = array_diff(array_keys($fieldStats), array_keys($data));
 			if (!empty($fields_no_data)) {
 				// Get record/event count to use for any non-repeating forms
-				$sql = "select distinct record, event_id from ".\Records::getDataTable($project_id)." where project_id = ".$project_id."
+				$sql = "select distinct record, event_id from ".\Records::getDataTable($project_id)." where project_id = ".$project_id." 
 						and field_name = '$table_pk' and record in (".prep_implode(array_keys($includeRecordsEvents)).")
 						and instance is null and event_id in (".prep_implode(array_keys($Proj->eventInfo)).")";
 				$q = db_query($sql);
